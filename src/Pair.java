@@ -4,6 +4,19 @@ public class Pair {
     private String number;
     private long numberOfOutgoigCalls =0;
 
+    public Pair() {
+    }
+
+    public Pair(String name, String number) {
+        this.name = name;
+        this.number = number;
+    }
+
+    public Pair(String name, String number, long numberOfOutgoigCalls) {
+        this.name = name;
+        this.number = number;
+        this.numberOfOutgoigCalls = numberOfOutgoigCalls;
+    }
 
     public String getName() {
         return name;

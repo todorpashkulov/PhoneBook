@@ -1,3 +1,2 @@
-phone3 | +359898626348 | 5
-phone2 | +359898626348 | 3
-awdaw | +359898626348 | 0
+TestName1 | JustForTest1 | 4
+TestName11 | JustForTest11 | 0

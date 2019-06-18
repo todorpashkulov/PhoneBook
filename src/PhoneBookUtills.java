@@ -22,125 +22,132 @@ public class PhoneBookUtills {
     public PhoneBook getPhoneBookInstanceFromFile(String filePath) {
         PhoneBook phoneBook = new PhoneBook();
 
-        List<String> stringPairsList = readFileInList("phonebook.txt");
+        List<String> stringPairsList = readFileInList(filePath);
+        if (stringPairsList.isEmpty()) {
+            System.out.println("File not found!!");
+            return null;
+        }
 
         phoneBook.setPairList(createPairsList(stringPairsList));
-        for (Pair p : phoneBook.getPairList()) {
-            p = createNormalPhoneNumber(p);
-        }
 
 
         return phoneBook;
     }
 
-    public void addPair(PhoneBook phoneBook) {
-        Scanner scanner = new Scanner(System.in);
+    public boolean addPair(PhoneBook phoneBook, String name, String phoneNumber) {
+        if (!isValidNumber(phoneNumber)) {
+            return false;
+        }
         Pair pair = new Pair();
-        System.out.println("Enter name for contact");
-        pair.setName(scanner.nextLine());
-        do {
-            System.out.println("Enter valid phone number");
-            pair.setNumber(scanner.nextLine());
+
+        pair.setName(name);
 
 
-        } while (!isValidNumber(pair.getNumber()));
+        pair.setNumber(phoneNumber);
+
 
         phoneBook.getPairList().add(createNormalPhoneNumber(pair));
-
+        return true;
 
     }
 
-    public void deletePairByName(PhoneBook phoneBook) {
-        Scanner scanner = new Scanner(System.in);
+    public boolean deletePairByName(PhoneBook phoneBook, String name) {
 
-        String name;
 
-        Iterator<Pair> pairIterator=phoneBook.getPairList().iterator();
+        Iterator<Pair> pairIterator = phoneBook.getPairList().iterator();
 
-        System.out.println("Enter the name of the pair you want to delete");
-        name = scanner.nextLine().toLowerCase();
-        while (pairIterator.hasNext())
-        {
-            if(pairIterator.next().getName().toLowerCase().equals(name)){
+
+        while (pairIterator.hasNext()) {
+            if (pairIterator.next().getName().toLowerCase().equals(name.toLowerCase())) {
                 pairIterator.remove();
                 System.out.println("Removed Succesfully !!");
-                return;
+                return true;
             }
         }
         System.out.println("No pair with name found");
-
+        return false;
 
 
     }
 
-    public void findNumberByName(PhoneBook phoneBook){
-        Scanner scanner = new Scanner(System.in);
-        String name;
-        System.out.println("Enter the name of the number you want to find");
-        name=scanner.nextLine();
-        for(Pair p:phoneBook.getPairList()) {
-            if(p.getName().toLowerCase().equals(name.toLowerCase())){
-                System.out.println("The number of "+name+" is "+p.getNumber());
-                return;
+    public boolean findNumberByName(PhoneBook phoneBook, String name) {
+
+
+        for (Pair p : phoneBook.getPairList()) {
+            if (p.getName().toLowerCase().equals(name.toLowerCase())) {
+                System.out.println("The number of " + name + " is " + p.getNumber());
+                return true;
             }
 
         }
         System.out.println("No pair with given name found!!!");
+        return false;
 
 
     }
 
-    public void printPairs(PhoneBook phoneBook){
-        List<Pair> pairList=phoneBook.getPairList();
+    public boolean printPairs(PhoneBook phoneBook) {
+        if (phoneBook.getPairList().isEmpty()) {
+            return false;
+        }
+        List<Pair> pairList = phoneBook.getPairList();
         pairList.sort(Comparator.comparing(Pair::getName));
         printMostCalledPairs(phoneBook);
-        int i=1;
+        int i = 1;
         System.out.println("List of all pairs in phone book");
-        for(Pair p :pairList){
-            System.out.println(i+". "+p.toString()+System.lineSeparator());
+        for (Pair p : pairList) {
+            System.out.println(i + ". " + p.toString() + System.lineSeparator());
             i++;
         }
-
+        return true;
     }
 
-    public void printMostCalledPairs(PhoneBook phoneBook){
-        List<Pair> pairList=phoneBook.getPairList();
+    public boolean printMostCalledPairs(PhoneBook phoneBook) {
+        List<Pair> pairList = phoneBook.getPairList();
+        if(phoneBook.getPairList().isEmpty()){
+            return false;
+        }
         pairList.sort(Comparator.comparing(Pair::getNumberOfOutgoigCalls).reversed());
         System.out.println("Top 5 most called pairs!!!");
-        int i=1;
-        for(Pair p:pairList){
-            if(i==5||p.getNumberOfOutgoigCalls()==0)
-            {
+        int i = 1;
+        for (Pair p : pairList) {
+            if (i == 5 || p.getNumberOfOutgoigCalls() == 0) {
                 break;
             }
-            System.out.println(i+". "+p.toString()+System.lineSeparator());
+            System.out.println(i + ". " + p.toString() + System.lineSeparator());
             i++;
         }
+        return true;
     }
 
-    public void callNumberByName(PhoneBook phoneBook){
-        Scanner scanner = new Scanner(System.in);
-        String name;
-        System.out.println("Enter the name of the number you want to Call");
-        name=scanner.nextLine();
-        for(Pair p:phoneBook.getPairList()) {
-            if(p.getName().toLowerCase().equals(name.toLowerCase())){
-                p.setNumberOfOutgoigCalls(p.getNumberOfOutgoigCalls()+1);
+    public boolean callNumberByName(PhoneBook phoneBook,String name) {
+
+        for (Pair p : phoneBook.getPairList()) {
+            if (p.getName().toLowerCase().equals(name.toLowerCase())) {
+                p.setNumberOfOutgoigCalls(p.getNumberOfOutgoigCalls() + 1);
                 System.out.println("Call Successful");
-                return;
+                return true;
             }
 
         }
         System.out.println("No pair with given name found!!!");
+        return false;
 
     }
 
-    public void savePhoneBook(PhoneBook phoneBook) throws IOException {
-        PrintWriter printWriter=new PrintWriter(new FileWriter("phonebooksave.txt"));
-        for (Pair p:phoneBook.getPairList()){
-            printWriter.println(p.getName()+" | "+p.getNumber()+" | "+p.getNumberOfOutgoigCalls());
+    public boolean savePhoneBook(PhoneBook phoneBook){
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter(new FileWriter("phonebooksave.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        for (Pair p : phoneBook.getPairList()) {
+            printWriter.println(p.getName() + " | " + p.getNumber() + " | " + p.getNumberOfOutgoigCalls());
         }
         printWriter.close();
+        return true;
     }
 
     private String[] trimPairs(String[] splitPair) {
@@ -158,6 +165,7 @@ public class PhoneBookUtills {
         Iterator<String> pairIterator = stringPairsList.iterator();
         List<Pair> pairs = new ArrayList<>();
 
+        outer:
         while (pairIterator.hasNext()) {
             String[] splitPair = pairIterator.next().split("[|]");
             if (splitPair.length != 3 || splitPair[0].isEmpty() || splitPair[1].isEmpty()) {
@@ -172,10 +180,16 @@ public class PhoneBookUtills {
             Pair pair = new Pair();
             pair.setName(splitPair[0]);
             pair.setNumber(splitPair[1]);
-            if(!splitPair[2].matches("\\d+")|| splitPair[2].isEmpty()){
-                splitPair[2]="0";
+            if (!splitPair[2].matches("\\d+") || splitPair[2].isEmpty()) {
+                splitPair[2] = "0";
             }
             pair.setNumberOfOutgoigCalls(Long.parseLong(splitPair[2]));
+            pair = createNormalPhoneNumber(pair);
+            for (Pair p : pairs) {
+                if (p.getNumber().equals(pair.getNumber())) {
+                    continue outer;
+                }
+            }
             pairs.add(pair);
 
         }
@@ -243,6 +257,7 @@ public class PhoneBookUtills {
         }
         return lines;
     }
+
 
 
 }
