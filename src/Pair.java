@@ -2,6 +2,7 @@ public class Pair {
 
     private String name;
     private String number;
+    private long numberOfOutgoigCalls =0;
 
 
     public String getName() {
@@ -20,11 +21,16 @@ public class Pair {
         this.number = number;
     }
 
+    public long getNumberOfOutgoigCalls() {
+        return numberOfOutgoigCalls;
+    }
+
+    public void setNumberOfOutgoigCalls(long numberOfOutgoigCalls) {
+        this.numberOfOutgoigCalls = numberOfOutgoigCalls;
+    }
+
     @Override
     public String toString() {
-        return "Pair{" +
-                "name='" + name + '\'' +
-                ", number='" + number + '\'' +
-                '}';
+        return "Name: "+name+System.lineSeparator()+"   Phone Number: "+number+System.lineSeparator()+"   Outgoing calls: "+ numberOfOutgoigCalls;
     }
 }
