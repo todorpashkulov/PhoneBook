@@ -1,2 +1,1 @@
-TestName1 | JustForTest1 | 4
-TestName11 | JustForTest11 | 0
+phone2 | +359898626348 | 3

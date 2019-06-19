@@ -78,6 +78,13 @@ class PhoneBookUtillsTest {
         assertTrue(PhoneBookUtills.getPhoneUtillsInstance().savePhoneBook(phoneBook));
     }
 
+    @Test
+    void isValidNumber(){
+        assertTrue(PhoneBookUtills.getPhoneUtillsInstance().isValidNumber("+359898626366"));
+        assertTrue(PhoneBookUtills.getPhoneUtillsInstance().isValidNumber("00359898626366"));
+        assertTrue(PhoneBookUtills.getPhoneUtillsInstance().isValidNumber("0898626366"));
+    }
+
 
 
 }

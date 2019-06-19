@@ -38,6 +38,15 @@ public class PhoneBookUtills {
         if (!isValidNumber(phoneNumber)) {
             return false;
         }
+        for(Pair p:phoneBook.getPairList()){
+            if(p.getNumber().equals(createNormalPhoneNumber(new Pair("Just for test",phoneNumber)).getNumber())){
+                System.out.println("Number already exists");
+                return false;
+            }
+
+        }
+
+
         Pair pair = new Pair();
 
         pair.setName(name);
@@ -91,8 +100,9 @@ public class PhoneBookUtills {
             return false;
         }
         List<Pair> pairList = phoneBook.getPairList();
-        pairList.sort(Comparator.comparing(Pair::getName));
+
         printMostCalledPairs(phoneBook);
+        pairList.sort(Comparator.comparing(Pair::getName));
         int i = 1;
         System.out.println("List of all pairs in phone book");
         for (Pair p : pairList) {
@@ -116,6 +126,9 @@ public class PhoneBookUtills {
             }
             System.out.println(i + ". " + p.toString() + System.lineSeparator());
             i++;
+        }
+        if(i==1){
+            System.out.println("You dont have any outgoing calls sorry :( !!!");
         }
         return true;
     }
@@ -180,7 +193,8 @@ public class PhoneBookUtills {
             Pair pair = new Pair();
             pair.setName(splitPair[0]);
             pair.setNumber(splitPair[1]);
-            if (!splitPair[2].matches("\\d+") || splitPair[2].isEmpty()) {
+
+            if (!splitPair[2].matches("\\d+") || splitPair[2].equals("")) {
                 splitPair[2] = "0";
             }
             pair.setNumberOfOutgoigCalls(Long.parseLong(splitPair[2]));
@@ -196,7 +210,7 @@ public class PhoneBookUtills {
         return pairs;
     }
 
-    private boolean isValidNumber(String number) {
+    public boolean isValidNumber(String number) {
 
         //for 0898626344
         if (number.length() == 10 &&
